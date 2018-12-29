@@ -1,0 +1,1212 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=11" >
+    <title></title>
+    <style>
+        body{
+            font-size:13px;
+        }
+        .datagrid table {
+            border-collapse: collapse;
+            text-align: left;
+            width: 98%;
+            background-color: aliceblue;
+        }
+
+        .datagrid {
+            font: normal 14px Arial, Helvetica, sans-serif;
+            background: #fff;
+            overflow: hidden;
+            border: 1px solid #006699;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+        }
+
+        .datagrid table td, .datagrid table th {
+            padding: 3px 10px;
+            text-align:left;
+        }
+
+        .datagrid table thead th {
+            background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );
+            background: -moz-linear-gradient( center top, #006699 5%, #00557F 100% );
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');
+            background-color: #006699;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            border-left: 1px solid #0070A8;
+        }
+
+        .headBlue {
+            background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );
+            background: -moz-linear-gradient( center top, #006699 5%, #00557F 100% );
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');
+            background-color: #006699;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            border-left: 1px solid #0070A8;
+            max-width:700px;
+        }
+
+        .datagrid table thead th:first-child {
+            border: none;
+        }
+
+        .datagrid table tbody td {
+            color: #00557F;
+            border-left: 1px solid #E1EEF4;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        .datagrid table tbody .alt td {
+            background: #E1EEf4;
+            color: #00557F;
+        }
+
+        .datagrid table tbody td:first-child {
+            border-left: none;
+        }
+
+        .datagrid table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .datagrid table tfoot td div {
+            border-top: 1px solid #006699;
+            background: #E1EEf4;
+        }
+
+        .datagrid table tfoot td {
+            padding: 0;
+            font-size: 12px;
+        }
+
+        .datagrid table tfoot td div {
+            padding: 2px;
+        }
+
+        .datagrid table tfoot td ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-align: right;
+        }
+
+        .datagrid table tfoot li {
+            display: inline;
+        }
+
+        .datagrid table tfoot li a {
+            text-decoration: none;
+            display: inline-block;
+            padding: 2px 8px;
+            margin: 1px;
+            color: #FFFFFF;
+            border: 1px solid #006699;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );
+            background: -moz-linear-gradient( center top, #006699 5%, #00557F 100% );
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');
+            background-color: #006699;
+        }
+
+        .datagrid table tfoot ul.active, .datagrid table tfoot ul a:hover {
+            text-decoration: none;
+            border-color: #00557F;
+            color: #FFFFFF;
+            background: none;
+            background-color: #006699;
+        }
+
+        div.dhtmlx_window_active, div.dhx_modal_cover_dv {
+            position: fixed !important;
+        }
+    </style>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <div class="datagrid" style="position:absolute; top:1px; left:10px;width:98%;">
+        <div style="overflow: hidden; position: fixed; top: 0; width: 100%;">
+            <table style="height:22px;">
+                <tr>
+                    <td><label style="width: 150px;">Display Form</label></td>
+                    <td style="width:80%;">
+                        <select id="selFormId" style="width: 200px;" onchange="formsChange(this)">
+                            <option value="">Choose A Form to Update</option>
+                            <option value="UserFunctions">User Functions</option>
+                            <option value="OTThreads">Thread Setup</option>
+                            <!---<option value="otFuncTypes">Function Types</option>-->
+                            <option value="otConnections">Connections</option>
+                            <option value="otMethodProperties">Method/Properties</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="divForm" style="position:absolute; top:19px; left:0px;width:100%;">
+        <div class="datagrid" id="divColor" style="position:absolute; display:none; z-index:999;">
+            <table style="width:170px;">
+                <tr style="width:170px;">
+                    <td class="tdColor" bgcolor="#330000" onmouseover="this.className='hov2';" onclick="SetColor('#330000')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#331900" onmouseover="this.className='hov2';" onclick="SetColor('#331900')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#333300" onmouseover="this.className='hov2';" onclick="SetColor('#333300')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#193300" onmouseover="this.className='hov2';" onclick="SetColor('#193300')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#003300" onmouseover="this.className='hov2';" onclick="SetColor('#003300')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#003319" onmouseover="this.className='hov2';" onclick="SetColor('#003319')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#003333" onmouseover="this.className='hov2';" onclick="SetColor('#003333')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#001933" onmouseover="this.className='hov2';" onclick="SetColor('#001933')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#000033" onmouseover="this.className='hov2';" onclick="SetColor('#000033')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#190033" onmouseover="this.className='hov2';" onclick="SetColor('#190033')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#330033" onmouseover="this.className='hov2';" onclick="SetColor('#330033')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#330019" onmouseover="this.className='hov2';" onclick="SetColor('#330019')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#000000" onmouseover="this.className='hov2';" onclick="SetColor('#000000')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="tdColor" bgcolor="#660000" onmouseover="this.className='hov2';" onclick="SetColor('#660000')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#663300" onmouseover="this.className='hov2';" onclick="SetColor('#663300')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#666600" onmouseover="this.className='hov2';" onclick="SetColor('#666600')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#336600" onmouseover="this.className='hov2';" onclick="SetColor('#336600')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#006600" onmouseover="this.className='hov2';" onclick="SetColor('#006600')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#006633" onmouseover="this.className='hov2';" onclick="SetColor('#006633')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#006666" onmouseover="this.className='hov2';" onclick="SetColor('#006666')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#003366" onmouseover="this.className='hov2';" onclick="SetColor('#003366')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#000066" onmouseover="this.className='hov2';" onclick="SetColor('#000066')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#330066" onmouseover="this.className='hov2';" onclick="SetColor('#330066')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#660066" onmouseover="this.className='hov2';" onclick="SetColor('#660066')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#660033" onmouseover="this.className='hov2';" onclick="SetColor('#660033')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#202020" onmouseover="this.className='hov2';" onclick="SetColor('#202020')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="tdColor" bgcolor="#990000" onmouseover="this.className='hov2';" onclick="SetColor('#990000')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#994C00" onmouseover="this.className='hov2';" onclick="SetColor('#994C00')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#999900" onmouseover="this.className='hov2';" onclick="SetColor('#999900')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#4C9900" onmouseover="this.className='hov2';" onclick="SetColor('#4C9900')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#009900" onmouseover="this.className='hov2';" onclick="SetColor('#009900')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#00994C" onmouseover="this.className='hov2';" onclick="SetColor('#00994C')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#009999" onmouseover="this.className='hov2';" onclick="SetColor('#009999')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#004C99" onmouseover="this.className='hov2';" onclick="SetColor('#004C99')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#000099" onmouseover="this.className='hov2';" onclick="SetColor('#000099')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#4C0099" onmouseover="this.className='hov2';" onclick="SetColor('#4C0099')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#990099" onmouseover="this.className='hov2';" onclick="SetColor('#990099')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#99004C" onmouseover="this.className='hov2';" onclick="SetColor('#99004C')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#404040" onmouseover="this.className='hov2';" onclick="SetColor('#404040')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="tdColor" bgcolor="#CC0000" onmouseover="this.className='hov2';" onclick="SetColor('#CC0000')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#CC6600" onmouseover="this.className='hov2';" onclick="SetColor('#CC6600')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#CCCC00" onmouseover="this.className='hov2';" onclick="SetColor('#CCCC00')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#66CC00" onmouseover="this.className='hov2';" onclick="SetColor('#66CC00')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#00CC00" onmouseover="this.className='hov2';" onclick="SetColor('#00CC00')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#00CC66" onmouseover="this.className='hov2';" onclick="SetColor('#00CC66')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#00CCCC" onmouseover="this.className='hov2';" onclick="SetColor('#00CCCC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#0066CC" onmouseover="this.className='hov2';" onclick="SetColor('#0066CC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#0000CC" onmouseover="this.className='hov2';" onclick="SetColor('#0000CC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#6600CC" onmouseover="this.className='hov2';" onclick="SetColor('#6600CC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#CC00CC" onmouseover="this.className='hov2';" onclick="SetColor('#CC00CC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#CC0066" onmouseover="this.className='hov2';" onclick="SetColor('#CC0066')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#606060" onmouseover="this.className='hov2';" onclick="SetColor('#606060')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="tdColor" bgcolor="#FF0000" onmouseover="this.className='hov2';" onclick="SetColor('#FF0000')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FF8000" onmouseover="this.className='hov2';" onclick="SetColor('#FF8000')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FFFF00" onmouseover="this.className='hov2';" onclick="SetColor('#FFFF00')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#80FF00" onmouseover="this.className='hov2';" onclick="SetColor('#80FF00')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#00FF00" onmouseover="this.className='hov2';" onclick="SetColor('#00FF00')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#00FF80" onmouseover="this.className='hov2';" onclick="SetColor('#00FF80')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#00FFFF" onmouseover="this.className='hov2';" onclick="SetColor('#00FFFF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#0080FF" onmouseover="this.className='hov2';" onclick="SetColor('#0080FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#0000FF" onmouseover="this.className='hov2';" onclick="SetColor('#0000FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#7F00FF" onmouseover="this.className='hov2';" onclick="SetColor('#7F00FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FF00FF" onmouseover="this.className='hov2';" onclick="SetColor('#FF00FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FF007F" onmouseover="this.className='hov2';" onclick="SetColor('#FF007F')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#808080" onmouseover="this.className='hov2';" onclick="SetColor('#808080')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="tdColor" bgcolor="#FF3333" onmouseover="this.className='hov2';" onclick="SetColor('#FF3333')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FF9933" onmouseover="this.className='hov2';" onclick="SetColor('#FF9933')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FFFF33" onmouseover="this.className='hov2';" onclick="SetColor('#FFFF33')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#99FF33" onmouseover="this.className='hov2';" onclick="SetColor('#99FF33')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#33FF33" onmouseover="this.className='hov2';" onclick="SetColor('#33FF33')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#33FF99" onmouseover="this.className='hov2';" onclick="SetColor('#33FF99')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#33FFFF" onmouseover="this.className='hov2';" onclick="SetColor('#33FFFF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#3399FF" onmouseover="this.className='hov2';" onclick="SetColor('#3399FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#3333FF" onmouseover="this.className='hov2';" onclick="SetColor('#3333FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#9933FF" onmouseover="this.className='hov2';" onclick="SetColor('#9933FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FF33FF" onmouseover="this.className='hov2';" onclick="SetColor('#FF33FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FF3399" onmouseover="this.className='hov2';" onclick="SetColor('#FF3399')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#A0A0A0" onmouseover="this.className='hov2';" onclick="SetColor('#A0A0A0')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="tdColor" bgcolor="#FF6666" onmouseover="this.className='hov2';" onclick="SetColor('#FF6666')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FFB266" onmouseover="this.className='hov2';" onclick="SetColor('#FFB266')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FFFF66" onmouseover="this.className='hov2';" onclick="SetColor('#FFFF66')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#B2FF66" onmouseover="this.className='hov2';" onclick="SetColor('#B2FF66')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#66FF66" onmouseover="this.className='hov2';" onclick="SetColor('#66FF66')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#66FFB2" onmouseover="this.className='hov2';" onclick="SetColor('#66FFB2')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#66FFFF" onmouseover="this.className='hov2';" onclick="SetColor('#66FFFF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#66B2FF" onmouseover="this.className='hov2';" onclick="SetColor('#66B2FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#6666FF" onmouseover="this.className='hov2';" onclick="SetColor('#6666FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#B266FF" onmouseover="this.className='hov2';" onclick="SetColor('#B266FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FF66FF" onmouseover="this.className='hov2';" onclick="SetColor('#FF66FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FF66B2" onmouseover="this.className='hov2';" onclick="SetColor('#FF66B2')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#C0C0C0" onmouseover="this.className='hov2';" onclick="SetColor('#C0C0C0')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="tdColor" bgcolor="#FF9999" onmouseover="this.className='hov2';" onclick="SetColor('#FF9999')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FFCC99" onmouseover="this.className='hov2';" onclick="SetColor('#FFCC99')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FFFF99" onmouseover="this.className='hov2';" onclick="SetColor('#FFFF99')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#CCFF99" onmouseover="this.className='hov2';" onclick="SetColor('#CCFF99')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#99FF99" onmouseover="this.className='hov2';" onclick="SetColor('#99FF99')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#99FFCC" onmouseover="this.className='hov2';" onclick="SetColor('#99FFCC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#99FFFF" onmouseover="this.className='hov2';" onclick="SetColor('#99FFFF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#99CCFF" onmouseover="this.className='hov2';" onclick="SetColor('#99CCFF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#9999FF" onmouseover="this.className='hov2';" onclick="SetColor('#9999FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#CC99FF" onmouseover="this.className='hov2';" onclick="SetColor('#CC99FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FF99FF" onmouseover="this.className='hov2';" onclick="SetColor('#FF99FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FF99CC" onmouseover="this.className='hov2';" onclick="SetColor('#FF99CC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#E0E0E0" onmouseover="this.className='hov2';" onclick="SetColor('#E0E0E0')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="tdColor" bgcolor="#FFCCCC" onmouseover="this.className='hov2';" onclick="SetColor('#FFCCCC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FFE5CC" onmouseover="this.className='hov2';" onclick="SetColor('#FFE5CC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FFFFCC" onmouseover="this.className='hov2';" onclick="SetColor('#FFFFCC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#E5FFCC" onmouseover="this.className='hov2';" onclick="SetColor('#E5FFCC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#CCFFCC" onmouseover="this.className='hov2';" onclick="SetColor('#CCFFCC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#CCFFE5" onmouseover="this.className='hov2';" onclick="SetColor('#CCFFE5')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#CCFFFF" onmouseover="this.className='hov2';" onclick="SetColor('#CCFFFF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#CCE5FF" onmouseover="this.className='hov2';" onclick="SetColor('#CCE5FF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#CCCCFF" onmouseover="this.className='hov2';" onclick="SetColor('#CCCCFF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#E5CCFF" onmouseover="this.className='hov2';" onclick="SetColor('#E5CCFF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FFCCFF" onmouseover="this.className='hov2';" onclick="SetColor('#FFCCCC')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FFCCE5" onmouseover="this.className='hov2';" onclick="SetColor('#FFCCE5')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                    <td class="tdColor" bgcolor="#FFFFFF" onmouseover="this.className='hov2';" onclick="SetColor('#FFFFFF')" onmouseout="this.className='tdColor'">&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+        <div class="datagrid" id="OTThreads" style="position: absolute; top: 15px; left: 10px; display: none; width:98%;">
+            <table style="width:100%;">
+                <tr>
+                    <td colspan="1" style="background-color:aliceblue; padding-right:5px;">Thread Items</td>
+                    <td colspan="2">
+                        <input type="hidden" id="ott_id" value="" />
+                        <input style="font-family:Tahoma;font-size:11px;text-align:left;z-index:0;width:250px;" type="text" id="txtThreadLookup" size="128" maxlength="128" value="" onkeyup="otThreadGetDataFilter(event, this)"><img src="down.gif" onclick="divToggle('mThreadSearch');" style="vertical-align:top;" />
+                        <div id="mThreadSearch" style="display:none; border: 1px inset black; overflow:auto; background-color:aliceblue;" onclick="this.style.display = 'none';"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Deactivate?</th>
+                    <th>Process Function</th>
+                    <th>Offset</th>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" id="ott_TurnOff" /></td>
+                    <td><input type="text" id="ott_ProcessFunc" value="" size="4" maxlength="20" onkeydown="otNumCheck(event, this);" /></td>
+                    <td><input type="text" id="ott_Offset" value="" size="4" maxlength="20" onkeydown="otNumCheck(event, this);" /></td>
+                </tr>
+                <tr>
+                    <th>Search Term</th>
+                    <th>Terminator</th>
+                    <th>Terminator2</th>
+                </tr>
+                <tr>
+                    <td><input type="text" id="ott_Search" value="" size="50" maxlength="100" style="width:165px;" /></td>
+                    <td><input type="text" id="ott_Token" value="" size="40" maxlength="255" style="width:165px;" /></td>
+                    <td><input type="text" id="ott_Token2" value="" size="20" maxlength="50"  style="width:165px;" /></td>
+                </tr>
+                <tr>
+                    <th colspan="1">Text Color</th>
+                    <th colspan="1">Back Color</th>
+                    <th colspan="1">Description</th>
+                </tr>
+                <tr>
+                    <td colspan="1"><input type="text" id="ott_textColor" value="" size="6" maxlength="6" onclick="otShowColor(this);"  style="width:165px;" onkeyup="document.getElementById('divColor').style.display = '';" /></td>
+                    <td colspan="1"><input type="text" id="ott_backColor" value="" size="6" maxlength="6" onclick="otShowColor(this);"  style="width:165px;" onkeyup="document.getElementById('divColor').style.display = '';" /></td>
+                    <td colspan="1"><input type="text" id="ott_Description" value="" size="120" maxlength="255" style="width:165px;" /></td>
+                </tr>
+                <tr>
+                    <td colspan="3"><input style="z-index:0;width:150px;height:22px;background-color:#B0C4DE" type="BUTTON" id="bUpdate" value="UPDATE" onclick="otThreadUpdateData()" /></td>
+                </tr>
+            </table>
+        </div>
+        <div id="UserFunctions" class="datagrid" style="position: absolute; top: 15px; left: 10px; display: none; width:98%;">
+            <table style="width:100%;">
+                <tr style="height:20px;">
+                    <td style="background-color:aliceblue; padding-right:5px;">User Function Items</td>
+                    <td>
+                        <input type="hidden" id="uf_Id" value="" />
+                        <input style="font-family:Tahoma;font-size:11px;text-align:left;z-index:0;width:250px;" type="text" id="txtuserFunctionsLookup" size="128" maxlength="128" value="" onkeyup="otUserFunctionGetDataFilter(event, this)"><img src="down.gif" onclick="divToggle('mUserFunctionSearch');" style="vertical-align:top;" />
+                        <div id="mUserFunctionSearch" style="display:none; border: 1px inset black; overflow:auto; background-color:aliceblue;" onclick="this.style.display = 'none';"></div>
+                    </td>
+                </tr>
+                <tr class="headBlue">
+                    <th>Deactivate?</th>
+                    <th>Name</th>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" id="uf_DontDisplay" /></td>
+                    <td><input type="text" id="uf_Name" value="" size="50" maxlength="50"></td>
+                </tr>
+                <tr class="headBlue">
+                    <th>Description</th>
+                    <th>Assign To</th>
+                </tr>
+                <tr>
+                    <td><textarea id="uf_Desc" cols="40" rows="4" wrap="hard"></textarea></td>
+                    <td><input type="text" id="uf_AssignTo" value="" size="15" maxlength="128"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input style="z-index:0;width:150px;height:22px;background-color:#B0C4DE" type="BUTTON" id="bUpdateUF" value="UPDATE" onclick="otUserFunctionUpdateData()" /></td>
+                </tr>
+            </table>
+        </div>
+        <div id="otConnections" class="datagrid" style="position: absolute; top: 23px; left: 10px; display: none; width:98%;">
+            <table>
+                <tr style="height:20px;">
+                    <td style="background-color:aliceblue; padding-right:5px;">Connection Items</td>
+                    <td>
+                        <input type="hidden" id="ID" value="" />
+                        <input style="font-family:Tahoma;font-size:11px;text-align:left;z-index:0;width:250px;" type="text" id="txtConnectionsLookup" size="128" maxlength="128" value="" onkeyup="otConnectionsGetDataFilter(event, this)"><img src="down.gif" onclick="divToggle('mConnectionsSearch');" style="vertical-align:top;" />
+                        <div id="mConnectionsSearch" style="display:none; border: 5px inset black; overflow:auto; background-color:aliceblue;" onclick="this.style.display = 'none';"></div>
+                    </td>
+                </tr>
+                <tr class="headBlue">
+                    <th>Active?</th>
+                    <th>Name</th>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" id="otcAble" /></td>
+                    <td><input type="text" id="otcConnectionName" value="" size="50" maxlength="50"></td>
+                </tr>
+                <tr class="headBlue">
+                    <th colspan="2">Connection String</th>
+                </tr>
+                <tr>
+                    <td colspan="2"><textarea id="otcConnectionString" cols="150" rows="4" wrap="hard"></textarea></td>
+                </tr>
+                <tr class="headBlue">
+                    <th>Table Select</th>
+                    <th>Column Select</th>
+                </tr>
+                <tr>
+                    <td><input type="text" id="otcTableSelect" value="" size="120" maxlength="255" /></td>
+                    <td><input type="text" id="otcColumnSelect" value="" size="120" maxlength="255" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input style="z-index:0;width:150px;height:22px;background-color:#B0C4DE;" type="BUTTON" id="bUpdateConnections" value="UPDATE" onclick=otConnectionsUpdateData()></td>
+                </tr>
+            </table>
+        </div>
+        <div id="otMethodProperties" class="datagrid" style="position: absolute; top: 23px; left: 10px; display: none; width:98%;">
+            <table style="width:100%;">
+                <tr style="height:20px;">
+                    <td style="background-color:aliceblue; padding-right:5px; width:350px;">Method/Properties Items</td>
+                    <td style="width:300px;">
+                        <input type="hidden" id="mp_Id" value="" />
+                        <input style="font-family:Tahoma;font-size:11px;text-align:left;z-index:0;width:250px;" type="text" id="txtMethodPropertiesup" size="128" maxlength="128" value="" onkeyup="otMethodPropertiesGetDataFilter(event, this,'0')"><img src="down.gif" onclick="divToggle('mMethodPropertiesSearch');" style="vertical-align:top;" />
+                        <div id="mMethodPropertiesSearch" style="display:none; border: 5px inset black; overflow:auto; background-color:aliceblue;" onclick="this.style.display = 'none';"></div>
+                    </td>
+                </tr>
+                <tr class="headBlue">
+                    <th>Name</th>
+                    <th>Function Type</th>
+                </tr>
+                <tr>
+                    <td style="width:300px;"><input type="text" id="mp_funcName" value="" size="50" maxlength="255"></td>
+                    <td style="width:300px;"><select style="width:250px;" id="mp_funcType"></select><img src="filter.jpg" height="20" style="vertical-align:bottom;" onclick="getAllByFuncType(event,this);" /></td>
+                </tr>
+                <tr class="headBlue">
+                    <th>Attribute</th>
+                    <th>Method/Prop</th>
+                </tr>
+                <tr>
+                    <td style="width:300px;"><input type="text" id="mp_Attribute" value="" size="4" maxlength="255" onkeydown="otNumCheck(event, this);"></td>
+                    <td style="width:300px;"><input type="text" id="mp_methOrProp" value="" size="4" maxlength="20" onkeydown="otNumCheck(event, this);" /></td>
+                </tr>
+                <tr class="headBlue">
+                    <th>Tooltip</th>
+                    <th>Syntax</th>
+                </tr>
+                <tr>
+                    <td style="width:300px;"><input type="text" id="mp_ToolTip" value="" size="50" maxlength="255"></td>
+                    <td style="width:300px;"><input type="text" id="mp_funcSyntax" value="" size="50" maxlength="255"></td>
+                </tr>
+                <tr class="headBlue">
+                    <th style="width:300px;">Help</th>
+                    <th style="width:300px;">Generate Text</th>
+                </tr>
+                <tr>
+                    <td style="width:300px;"><textarea id="mp_funcHelp" cols="50" rows="4" wrap="hard"></textarea></td>
+                    <td style="width:300px;"><textarea id="mp_funcGenerate" cols="50" rows="4" wrap="hard"></textarea></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input style="z-index:0;width:150px;height:22px;background-color:#B0C4DE" type="BUTTON" id="bUpdateMethodProperties" value="UPDATE" onclick=otMethodPropertiesUpdateData()></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript" language="javascript">
+    var adHoldRecords       = 0x100;        //Retrieves more records or changes the next position without committing all pending changes
+    var adMovePrevious      = 0x200;        //Supports the MoveFirst and MovePrevious methods, and Move or GetRows methods
+    var adBookmark          = 0x2000;       //Supports the Bookmark property
+    var adApproxPosition    = 0x4000;       //Supports the AbsolutePosition and AbsolutePage properties
+    var adUpdateBatch       = 0x10000;      //Supports UpdateBatch and CancelBatch methods
+    var adResync            = 0x20000;      //Supports the Resync method
+    var adNotify            = 0x40000;      //Indicates that the data provider supports notifications (which determines whether Recordset events are supported)
+    var adFind              = 0x80000;      //Supports the Find method
+    var adIndex             = 0x100000;     //Supports the Index property
+    var adSeek              = 0x200000;     //Supports the Seek method
+    var adAddNew            = 0x1000400;    //Supports the AddNew method
+    var adDelete            = 0x1000800;    //Supports the Delete method
+    var adUpdate            = 0x1008000;    //Supports the Update method
+
+    var sOTAppPath = getPath();
+    var bIsCustomBrowser = fnIsOurCustomBrowser();
+    var gProvider = "Provider=Microsoft.Jet.OLEDB.4.0; Data Source=" + sOTAppPath + "OTEdit.mdb";
+
+    if (!bIsCustomBrowser) {
+        alert('You must be using OsTECH Editor toview this page properly.');
+    } else {
+        //alert($('#divForm') + sOTAppPath);
+    }
+    function divToggle(sCtrl) {
+        var ctrl = document.getElementById(sCtrl);
+        if (ctrl) {
+            if (ctrl.style.display == "") {
+                ctrl.style.display = "none";
+            } else {
+                ctrl.style.display = "";
+            }
+        }
+    }
+    function formsChange(ctrl) {
+        var divCtrl = document.getElementById("divForm");
+        var oColl = divCtrl.getElementsByTagName("DIV");
+        for (var i = 0; i < oColl.length; i++) {
+            oColl[i].style.display = "none";
+        }
+        var divCtrl1 = document.getElementById(ctrl.options[ctrl.selectedIndex].value);
+        if (divCtrl1) {
+            divCtrl1.style.display = "";
+            switch (ctrl.options[ctrl.selectedIndex].value) {
+                case "OTThreads":
+                    //otThreadFillComboBox();
+                    break;
+                case "UserFunctions":
+                    //otUserFunctionThreadFillComboBox();
+                    break;
+                case "otMethodProperties":
+                    otFuncTypeFillComboBox();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    function getAllByFuncType(ev, ctrl) {
+        mp_funcType = $("#mp_funcType").val();
+        if (mp_funcType) {
+            otMethodPropertiesGetDataFilter(ev, $("#txtMethodPropertiesup")[0], mp_funcType);
+        }
+    }
+    function otThreadFillComboBox() {
+        var ctrl = document.getElementById("mThreadSearch");
+        if (ctrl && ctrl.options.length <= 1) {
+            var Conn = new ActiveXObject("ADODB.Connection");
+            var RS = new ActiveXObject("ADODB.Recordset");
+            var selStr = "SELECT * FROM OTThreads WHERE ott_TurnOff = 0";
+            var oOption;
+            var i = 0;
+            Conn.Open(gProvider);
+            RS.Open(selStr, Conn);
+            while (RS.EOF != 1) {
+                var optNew = document.createElement('option');
+                optNew.text = RS('ott_Search') + " - " + RS('ott_Description');
+                optNew.value = RS('ott_id');
+                var optOld = ctrl.options[null];
+                try {
+                    ctrl.add(optNew, optOld); // standards compliant; doesn't work in IE
+                    ctrl.selectedIndex = 0;
+                }
+                catch (ex) {
+                    ctrl.add(optNew, null); // IE only
+                }
+                RS.MoveNext();
+                i++;
+            }
+            RS.Close();
+            Conn.Close();
+        }
+    }
+    function otThreadGetData(iId) {
+        var Conn = new ActiveXObject("ADODB.Connection");
+        var RS = new ActiveXObject("ADODB.Recordset");
+        var selStr = "SELECT * FROM OTThreads WHERE ott_id = ";
+        var tstStr;
+
+
+        if (parseInt(iId, 10) == -1) {
+            document.getElementById('ott_id').value             = 0;
+            document.getElementById('ott_TurnOff').checked      = false;
+            document.getElementById('ott_ProcessFunc').value    = 0;
+            document.getElementById('ott_Offset').value         = 0;
+            document.getElementById('ott_Search').value         = "";
+            document.getElementById('ott_Token').value          = "";
+            document.getElementById('ott_Token2').value         = "";
+            document.getElementById('ott_Description').value    = "";
+            document.getElementById('ott_textColor').value      = "000000";
+            document.getElementById('ott_textColor').style.backgroundColor
+                                                                = "#000000";
+            document.getElementById('ott_backColor').value      = "FFFFFF";
+            document.getElementById('ott_backColor').style.backgroundColor
+                                                                = "#FFFFFF";
+            document.getElementById('bUpdate').style.display    = "none";
+            //document.getElementById('bAdd').style.display = "";
+            return;
+        }
+        else {
+            selStr += iId;
+            Conn.Open(gProvider);
+            RS.Open(selStr, Conn);
+            document.getElementById('bUpdate').style.display = "";
+            //document.getElementById('bAdd').style.display = "none";
+            while (RS.EOF != 1) {
+                document.getElementById('ott_id').value = RS('ott_id');
+                document.getElementById('ott_TurnOff').checked = RS('ott_TurnOff');
+                document.getElementById('ott_ProcessFunc').value = RS('ott_ProcessFunc');
+                document.getElementById('ott_Offset').value = RS('ott_Offset');
+                document.getElementById('ott_Search').value = RS('ott_Search');
+                tstStr = new String(RS('ott_Token'));
+                if (tstStr == "null")
+                    document.getElementById('ott_Token').value = "";
+                else
+                    document.getElementById('ott_Token').value = RS('ott_Token');
+                tstStr = new String(RS('ott_Token2'));
+                if (tstStr == "null")
+                    document.getElementById('ott_Token2').value = "";
+                else
+                    document.getElementById('ott_Token2').value = RS('ott_Token2');
+                document.getElementById('ott_Description').value = RS('ott_Description');
+                document.getElementById('ott_textColor').value = RS('ott_textColor');
+                document.getElementById('ott_textColor').style.backgroundColor
+                                            = "#" + RS('ott_textColor');
+                document.getElementById('ott_backColor').value = RS('ott_backColor');
+                document.getElementById('ott_backColor').style.backgroundColor
+                                            = "#" + RS('ott_backColor');
+                RS.MoveNext();
+            }
+
+            RS.Close();
+            Conn.Close();
+        }
+    }
+    function otThreadGetDataFilter(ev, ctrl) {
+        var divCtrl = document.getElementById("mThreadSearch");
+        if (ev.keyCode == 27) {
+            divCtrl.style.display = "none";
+            return
+        } else if (ev.keyCode == 13 && ((ctrl.value.length >= 2 && ctrl.value != "*") || ctrl.value == "*")) {
+            var Conn = new ActiveXObject("ADODB.Connection");
+            var RS = new ActiveXObject("ADODB.Recordset");
+            var selStr = "SELECT * FROM OTThreads";
+            var nTop = 0;
+            var key = ctrl.value;
+            if (key != "*")
+                selStr += " WHERE ott_Search like '%" + key + "%'";
+            var i = 0;
+            Conn.Open(gProvider);
+            RS.Open(selStr, Conn);
+            var tempStr = new String();
+            var iWidth = parseInt(ctrl.style.width.replace("px", ""), 10);
+            while (RS.EOF != 1) {
+                var sToken = new String(RS('ott_Token'));
+                tempStr += "<div onmouseover=\"this.style.backgroundColor='#C0C0C0';\" onmouseout=\"this.style.backgroundColor='aliceblue';\" style=\"position:absolute;left:0px;top:" + nTop + "px;font-family:Tahoma;font-size:12px;z-index:2;width:" + (iWidth - 2) + "px;height:21px;border-style:solid;background-color:aliceblue;border-color:B0C4DE;border-width:thin;border-bottom-width:0px;\"" +
+                           " onclick=otThreadGetData(" + RS('ott_id') + ")>" + RS('ott_Search') + (sToken != "null" ? " - " + sToken.substr(0, 10) : "") + "</div>";
+                nTop += 21;
+                RS.MoveNext();
+                i++;
+            }
+            //RS.RecordSet always = -1
+            if ((RS.Supports(adApproxPosition) == true && RS.RecordCount == 0) || (RS.Supports(adApproxPosition) == false && i == 0)) {
+                RS.Close();
+                Conn.Close();
+                divCtrl.style.display = "none";
+                return;
+            }
+            divCtrl.innerHTML = tempStr;
+            divCtrl.style.position = "absolute"
+            divCtrl.style.display = "";
+            var tl = otGetOffset(ctrl);
+            divCtrl.style.pixelHeight = 100;
+            divCtrl.style.pixelWidth = iWidth + (i < 5 ? 2 : 20);
+            divCtrl.style.pixelTop = tl.top + 20;
+            divCtrl.style.pixelLeft = tl.left;
+            RS.Close();
+            Conn.Close();
+        }
+    }
+    function otThreadUpdateData() {
+        try {
+            var Conn = new ActiveXObject("ADODB.Connection");
+            var updStr = new String();
+            var tott_id = document.getElementById('ott_id').value;
+            var tott_TurnOff = (document.getElementById('ott_TurnOff').checked ? 1 : 0);
+            var tott_ProcessFunc = document.getElementById('ott_ProcessFunc').value;
+            var tott_Search = document.getElementById('ott_Search').value;
+            var tott_Token = document.getElementById('ott_Token').value;
+            var tott_Description = document.getElementById('ott_Description').value;
+            var tott_textColor = document.getElementById('ott_textColor').value.replace("#", "");
+            var tott_backColor = document.getElementById('ott_backColor').value.replace("#", "");
+
+            Conn.Open(gProvider);
+            var re = /\x22/ig;
+            tott_Search = tott_Search.replace(re, '\x22\x22');
+            tott_Token = tott_Token.replace(re, '\x22\x22');
+            updStr = "UPDATE	OTThreads SET " +
+                            "ott_TurnOff		= " + tott_TurnOff + ", " +
+                            "ott_ProcessFunc	= " + tott_ProcessFunc + ", " +
+                            "ott_Search		= \"" + tott_Search + "\", " +
+                            "ott_Token			= \"" + tott_Token + "\", " +
+                            "ott_Description	= \"" + tott_Description + "\", " +
+                            "ott_textColor		= \"" + tott_textColor + "\", " +
+                            "ott_backColor		= \"" + tott_backColor + "\" " +
+                               " WHERE ott_id= " + tott_id;
+
+            //alert(updStr);
+            Conn.Execute(updStr);
+            Conn.Close();
+        }
+        catch (err) {
+            alert(err.message);
+        }
+    }
+    function otUserFunctionThreadFillComboBox() {
+        var ctrl = document.getElementById("mUserFunctionSearch");
+        if (ctrl && ctrl.options.length <= 1) {
+            var Conn = new ActiveXObject("ADODB.Connection");
+            var RS = new ActiveXObject("ADODB.Recordset");
+            var selStr = "SELECT * FROM UserFunctions WHERE uf_DontDisplay = 0";
+            var oOption;
+            var i = 0;
+            Conn.Open(gProvider);
+            RS.Open(selStr, Conn);
+            while (RS.EOF != 1) {
+                var optNew = document.createElement('option');
+                optNew.text = RS('uf_Name');
+                optNew.value = RS('uf_Id');
+                var optOld = ctrl.options[null];
+                try {
+                    ctrl.add(optNew, optOld); // standards compliant; doesn't work in IE
+                    ctrl.selectedIndex = 0;
+                }
+                catch (ex) {
+                    ctrl.add(optNew, null); // IE only
+                }
+                RS.MoveNext();
+                i++;
+            }
+            RS.Close();
+            Conn.Close();
+        }
+    }
+    function otUserFunctionGetDataFilter(ev, ctrl) {
+        var divCtrl = document.getElementById("mUserFunctionSearch");
+
+        if (ev.keyCode == 27) {
+            divCtrl.style.display = "none";
+            return
+        } else if (ev.keyCode == 13 && ((ctrl.value.length >= 2 && ctrl.value != "*") || ctrl.value == "*")) {
+            var Conn = new ActiveXObject("ADODB.Connection");
+            var RS = new ActiveXObject("ADODB.Recordset");
+            var selStr = "SELECT * FROM UserFunctions";
+            var nTop = 0;
+            var key = ctrl.value;
+            if (key != "*")
+                selStr += " WHERE uf_Name like '%" + key + "%'";
+            var i = 0;
+            Conn.Open(gProvider);
+            RS.Open(selStr, Conn);
+            var tempStr = new String();
+            var iWidth = parseInt(ctrl.style.width.replace("px", ""), 10);
+            while (RS.EOF != 1) {
+                tempStr += "<div onmouseover=\"this.style.backgroundColor='#C0C0C0';\" onmouseout=\"this.style.backgroundColor='aliceblue';\" style=\"position:absolute;left:0px;top:" + nTop + "px;font-family:Tahoma;font-size:12px;z-index:2;width:" + (iWidth - 2) + "px;height:21px;border-style:solid;background-color:aliceblue;border-color:B0C4DE;border-width:thin;border-bottom-width:0px;\"" +
+                           " onclick=otUserFunctionGetData(" + RS('uf_Id') + ")>" + RS('uf_Name') + "</div>";
+                nTop += 21;
+                RS.MoveNext();
+                i++;
+            }
+            //RS.RecordSet always = -1
+            if ((RS.Supports(adApproxPosition) == true && RS.RecordCount == 0) || (RS.Supports(adApproxPosition) == false && i == 0)) {
+                RS.Close();
+                Conn.Close();
+                divCtrl.style.display = "none";
+                return;
+            }
+            divCtrl.innerHTML           = tempStr;
+            divCtrl.style.position      = "absolute"
+            divCtrl.style.display       = "";
+            var tl                      = otGetOffset(ctrl);
+            divCtrl.style.pixelHeight   = 100;
+            divCtrl.style.pixelWidth    = iWidth + (i < 5 ? 2 : 20);
+            divCtrl.style.pixelTop      = tl.top + 20;
+            divCtrl.style.pixelLeft     = tl.left;
+            RS.Close();
+            Conn.Close();
+        }
+    }
+    function otUserFunctionGetData(iId) {
+        var Conn = new ActiveXObject("ADODB.Connection");
+        var RS = new ActiveXObject("ADODB.Recordset");
+        var selStr = "SELECT * FROM UserFunctions WHERE uf_Id = ";
+        var tstStr;
+
+        if (parseInt(iId, 10) == -1) {
+            document.getElementById('uf_Id').value = 0;
+            document.getElementById('uf_DontDisplay').checked = false;
+            document.getElementById('uf_Name').value = "";
+            document.getElementById('uf_Desc').value = "";
+            document.getElementById('uf_AssignTo').value = "";
+            return;
+        }
+        else {
+            selStr += iId;
+            Conn.Open(gProvider);
+            RS.Open(selStr, Conn);
+            //document.getElementById('bUpdate').style.display = "";
+            //document.getElementById('bAdd').style.display = "none";
+            while (RS.EOF != 1) {
+                document.getElementById('uf_Id').value = RS('uf_Id');
+                document.getElementById('uf_DontDisplay').checked = RS('uf_DontDisplay');
+                document.getElementById('uf_Name').value = RS('uf_Name');
+                document.getElementById('uf_Desc').value = RS('uf_Desc');
+                tstStr = new String(RS('uf_AssignTo'));
+                if (tstStr == "null")
+                    document.getElementById('uf_AssignTo').value = "";
+                else
+                    document.getElementById('uf_AssignTo').value = RS('uf_AssignTo');
+                RS.MoveNext();
+            }
+
+            RS.Close();
+            Conn.Close();
+        }
+    }
+    function otUserFunctionUpdateData() {
+        try {
+            var Conn = new ActiveXObject("ADODB.Connection");
+            var updStr = new String();
+            var tuf_Id          = document.getElementById('uf_Id').value;
+            var tuf_DontDisplay = (document.getElementById('uf_DontDisplay').checked ? 1 : 0);
+            var tuf_Name        = document.getElementById('uf_Name').value;
+            var tuf_Desc        = document.getElementById('uf_Desc').value;
+            var tuf_AssignTo    = document.getElementById('uf_AssignTo').value;
+
+            Conn.Open(gProvider);
+            var re = /\x22/ig;
+            tuf_Desc = tuf_Desc.replace(re, '\x22\x22');
+            tuf_AssignTo = tuf_AssignTo.replace(re, '\x22\x22');
+            updStr = "UPDATE	UserFunctions SET " +
+                "uf_DontDisplay	= " + tuf_DontDisplay + ", " +
+                "uf_Desc	        = \"" + tuf_Desc + "\", " +
+                "uf_AssignTo       = \"" + tuf_AssignTo + "\" " +
+                " WHERE uf_Id = " + tuf_Id;
+            //alert(updStr);
+            Conn.Execute(updStr);
+            Conn.Close();
+            alert("Successfully updated " + tuf_Name);
+        }
+        catch (err) {
+            alert(err.message);
+        }
+    }
+    function otConnectionsGetData(iId) {
+        var Conn = new ActiveXObject("ADODB.Connection");
+        var RS = new ActiveXObject("ADODB.Recordset");
+        var selStr = "SELECT * FROM otConnections WHERE ID = ";
+        var tstStr;
+
+
+        if (parseInt(iId, 10) == -1) {
+            document.getElementById('ID').value = 0;
+            document.getElementById('otcAble').checked = false;
+            document.getElementById('otcConnectionName').value = "";
+            document.getElementById('otcConnectionString').value = "";
+            document.getElementById('otcTableSelect').value = "";
+            document.getElementById('otcColumnSelect').value = "";
+            return;
+        }
+        else {
+            selStr += iId;
+            Conn.Open(gProvider);
+            RS.Open(selStr, Conn);
+            document.getElementById('bUpdateConnections').style.display = "";
+            while (RS.EOF != 1) {
+                document.getElementById('ID').value = RS('ID');
+                document.getElementById('otcAble').checked = RS('otcAble');
+                document.getElementById('otcConnectionName').value = RS('otcConnectionName');
+                document.getElementById('otcConnectionString').value = RS('otcConnectionString');
+                document.getElementById('otcTableSelect').value = RS('otcTableSelect');
+                document.getElementById('otcColumnSelect').value = RS('otcColumnSelect');
+                RS.MoveNext();
+            }
+            RS.Close();
+            Conn.Close();
+        }
+    }
+    function otConnectionsGetDataFilter(ev, ctrl) {
+        var divCtrl = document.getElementById("mConnectionsSearch");
+        if (ev.keyCode == 27) {
+            divCtrl.style.display = "none";
+            return
+        } else if (ev.keyCode == 13 && ((ctrl.value.length >= 2 && ctrl.value != "*") || ctrl.value == "*")) {
+            var Conn = new ActiveXObject("ADODB.Connection");
+            var RS = new ActiveXObject("ADODB.Recordset");
+            var selStr = "SELECT * FROM otConnections";
+            var nTop = 0;
+            var key = ctrl.value;
+            if (key != "*")
+                selStr += " WHERE otcConnectionName like '%" + key + "%'";
+            var i = 0;
+            Conn.Open(gProvider);
+            RS.Open(selStr, Conn);
+            var tempStr = new String();
+            var iWidth = parseInt(ctrl.style.width.replace("px", ""), 10);
+            while (RS.EOF != 1) {
+                tempStr += "<div onmouseover=\"this.style.backgroundColor='#C0C0C0';\" onmouseout=\"this.style.backgroundColor='aliceblue';\" style=\"position:absolute;left:0px;top:" + nTop + "px;font-family:Tahoma;font-size:12px;z-index:2;width:" + (iWidth - 2) + "px;height:21px;border-style:solid;background-color:aliceblue;border-color:B0C4DE;border-width:thin;border-bottom-width:0px;\"" +
+                           " onclick=otConnectionsGetData(" + RS('ID') + ")>" + RS('otcConnectionName') + "</div>";
+                nTop += 21;
+                RS.MoveNext();
+                i++;
+            }
+            //RS.RecordSet always = -1
+            if ((RS.Supports(adApproxPosition) == true && RS.RecordCount == 0) || (RS.Supports(adApproxPosition) == false && i == 0)) {
+                RS.Close();
+                Conn.Close();
+                divCtrl.style.display = "none";
+                return;
+            }
+            divCtrl.innerHTML = tempStr;
+            divCtrl.style.position = "absolute"
+            divCtrl.style.display = "";
+            var tl = otGetOffset(ctrl);
+            divCtrl.style.pixelHeight = 100;
+            divCtrl.style.pixelWidth = iWidth + (i < 5 ? 2 : 20);
+            divCtrl.style.pixelTop = tl.top + 20;
+            divCtrl.style.pixelLeft = tl.left;
+            RS.Close();
+            Conn.Close();
+        }
+    }
+    function otConnectionsUpdateData() {
+        var Conn 				= new ActiveXObject("ADODB.Connection");
+        var updStr 				= new String();
+        var tID 				= document.getElementById('ID').value;
+        var totcAble 			= (document.getElementById('otcAble').checked ? 1 : 0);
+        var totcConnectionName 	= document.getElementById('otcConnectionName').value;
+        var re 					= /\x22/ig;
+        var totcConnectionString 	= document.getElementById('otcConnectionString').value.replace(re, '\x22\x22');;
+        var totcTableSelect 		= document.getElementById('otcTableSelect').value.replace(re, '\x22\x22');;
+        var totcColumnSelect 		= document.getElementById('otcColumnSelect').value.replace(re, '\x22\x22');;
+
+        Conn.Open(gProvider);
+        updStr = "UPDATE	otConnections SET " +
+							"otcAble				= " 	+ totcAble 				+ ", " +
+							"otcConnectionName		= \"" 	+ totcConnectionName 	+ "\", " +
+							"otcConnectionString	= \"" 	+ totcConnectionString 	+ "\", " +
+							"otcTableSelect			= \"" 	+ totcTableSelect 		+ "\", " +
+							"otcColumnSelect		= \"" 	+ totcColumnSelect 		+ "\"" +
+				" WHERE ID= " + tID;
+
+        re = /\x13/ig;
+		updStr = updStr.replace(re, "");
+		re = /\x10/ig;
+		updStr = updStr.replace(re, "");
+        try{
+			Conn.Execute(updStr);
+			Conn.Close();
+		}
+		catch(e){
+			alert(e.message);
+		}
+    }
+
+    function otMethodPropertiesGetData(iId) {
+        var Conn = new ActiveXObject("ADODB.Connection");
+        var RS = new ActiveXObject("ADODB.Recordset");
+        var selStr = "SELECT A.*, B.ft_name FROM otMethodProperties A INNER JOIN otFuncTypes B ON A.mp_funcType = B.ft_funcType WHERE mp_Id = ";
+        var tstStr;
+
+
+        if (parseInt(iId, 10) == -1) {
+            document.getElementById('mp_Id').value = 0;
+            $('#mp_funcType').val(1);
+            document.getElementById('mp_Attribute').value = "";
+            document.getElementById('mp_methOrProp').value = "";
+            document.getElementById('mp_funcName').value = "";
+            document.getElementById('mp_ToolTip').value = "";
+            document.getElementById('mp_funcSyntax').value = "";
+            document.getElementById('mp_funcHelp').value = "";
+            document.getElementById('mp_funcGenerate').value = "";
+            return;
+        }
+        else {
+            selStr += iId;
+            Conn.Open(gProvider);
+            RS.Open(selStr, Conn);
+            document.getElementById('bUpdateMethodProperties').style.display = "";
+            while (RS.EOF != 1) {
+                document.getElementById('mp_Id').value = parseInt(RS('mp_Id'));
+                $("#mp_funcType").val(parseInt(RS('mp_funcType')));
+                tstStr = new String(RS('mp_Attribute'));
+                document.getElementById('mp_Attribute').value = (tstStr == "null" ? "" : RS('mp_Attribute'));
+                document.getElementById('mp_methOrProp').value = RS('mp_methOrProp');
+                tstStr = new String(RS('mp_methOrProp'));
+                document.getElementById('mp_methOrProp').title = (tstStr == "1" ? "Method" : "Property");
+                document.getElementById('mp_funcName').value = RS('mp_funcName');
+                tstStr = new String(RS('mp_ToolTip'));
+                document.getElementById('mp_ToolTip').value = (tstStr == "null" ? "" : RS('mp_ToolTip'));
+                tstStr = new String(RS('mp_funcSyntax'));
+                document.getElementById('mp_funcSyntax').value = (tstStr == "null" ? "" : RS('mp_funcSyntax'));
+                document.getElementById('mp_funcHelp').value = RS('mp_funcHelp');
+                document.getElementById('mp_funcGenerate').value = RS('mp_funcGenerate');
+                RS.MoveNext();
+            }
+            RS.Close();
+            Conn.Close();
+        }
+    }
+    function otMethodPropertiesGetDataFilter(ev, ctrl, func) {
+        var divCtrl = document.getElementById("mMethodPropertiesSearch");
+        if (ev && ev.keyCode == 27) {
+            divCtrl.style.display = "none";
+            return
+        } else if (func != "0" || ev.keyCode == 13 && ((ctrl.value.length >= 2 && ctrl.value != "*") || ctrl.value == "*")) {
+            var Conn = new ActiveXObject("ADODB.Connection");
+            var RS = new ActiveXObject("ADODB.Recordset");
+            var selStr = "SELECT * FROM otMethodProperties";
+            var nTop = 0;
+            var key = ctrl.value;
+            if (key != "*" && func == "0")
+                selStr += " WHERE mp_funcName like '%" + key + "%'";
+            else
+                selStr += " WHERE mp_funcType = " + func;
+            var i = 0;
+            Conn.Open(gProvider);
+            RS.Open(selStr, Conn);
+            var tempStr = new String();
+            var iWidth = parseInt(ctrl.style.width.replace("px", ""), 10);
+            while (RS.EOF != 1) {
+                tempStr += "<div onmouseover=\"this.style.backgroundColor='#C0C0C0';\" onmouseout=\"this.style.backgroundColor='aliceblue';\" style=\"position:absolute;left:0px;top:" + nTop + "px;font-family:Tahoma;font-size:12px;z-index:2;width:" + (iWidth - 2) + "px;height:21px;border-style:solid;background-color:aliceblue;border-color:B0C4DE;border-width:thin;border-bottom-width:0px;\"" +
+                           " onclick=otMethodPropertiesGetData(" + RS('mp_Id') + ")>" + RS('mp_funcName') + "</div>";
+                nTop += 21;
+                RS.MoveNext();
+                i++;
+            }
+            //RS.RecordSet always = -1
+            if ((RS.Supports(adApproxPosition) == true && RS.RecordCount == 0) || (RS.Supports(adApproxPosition) == false && i == 0)) {
+                RS.Close();
+                Conn.Close();
+                divCtrl.style.display = "none";
+                return;
+            }
+            divCtrl.innerHTML = tempStr;
+            divCtrl.style.position = "absolute"
+            divCtrl.style.display = "";
+            var tl = otGetOffset(ctrl);
+            divCtrl.style.pixelHeight = 100;
+            divCtrl.style.pixelWidth = iWidth + (i < 5 ? 2 : 20);
+            divCtrl.style.pixelTop = tl.top + 20;
+            divCtrl.style.pixelLeft = tl.left;
+            RS.Close();
+            Conn.Close();
+        }
+    }
+    function otFuncTypeFillComboBox() {
+        var ctrl = document.getElementById("mp_funcType");
+        if (ctrl) {
+            var Conn = new ActiveXObject("ADODB.Connection");
+            var RS = new ActiveXObject("ADODB.Recordset");
+            var selStr = "SELECT * FROM otFuncTypes WHERE ft_funcType IN (SELECT mp_funcType FROM otMethodProperties)";
+            var oOption;
+            var i = 0;
+            Conn.Open(gProvider);
+            RS.Open(selStr, Conn);
+            while (RS.EOF != 1) {
+                var optNew = document.createElement('option');
+                optNew.text = RS('ft_Name');
+                optNew.value = RS('ft_funcType');
+                var optOld = ctrl.options[null];
+                try {
+                    ctrl.add(optNew, optOld); // standards compliant; doesn't work in IE
+                    ctrl.selectedIndex = 0;
+                }
+                catch (ex) {
+                    ctrl.add(optNew, null); // IE only
+                }
+                RS.MoveNext();
+                i++;
+            }
+            RS.Close();
+            Conn.Close();
+        }
+    }
+    function otMethodPropertiesUpdateData() {
+        var Conn = new ActiveXObject("ADODB.Connection");
+        var updStr = new String();
+        var tID = document.getElementById('mp_Id').value;
+        var tmp_funcType = $("#mp_funcType").val();
+        var tmp_Attribute = document.getElementById('mp_Attribute').value;
+        var tmp_methOrProp = document.getElementById('mp_methOrProp').value;
+        var tmp_funcName = document.getElementById('mp_funcName').value;
+        var tmp_ToolTip = document.getElementById('mp_ToolTip').value;
+        var tmp_funcSyntax = document.getElementById('mp_funcSyntax').value;
+        var tmp_funcHelp = document.getElementById('mp_funcHelp').value;
+        var tmp_funcGenerate = document.getElementById('mp_funcGenerate').value;
+
+        Conn.Open(gProvider);
+        var re = /\x22/ig;
+        tmp_ToolTip     = tmp_ToolTip.replace(re, '\x22\x22');
+        tmp_funcSyntax  = tmp_funcSyntax.replace(re, '\x22\x22');
+        tmp_funcHelp    = tmp_funcHelp.replace(re, '\x22\x22');
+        tmp_funcGenerate = tmp_funcGenerate.replace(re, '\x22\x22');
+
+        updStr = "UPDATE OTMethodProperties SET " +
+                    "mp_funcType		= " + tmp_funcType + ", " +
+                    "mp_Attribute	= \"" + tmp_Attribute + "\", " +
+                    "mp_methOrProp		= \"" + tmp_methOrProp + "\", " +
+                    "mp_funcName			= \"" + tmp_funcName + "\", " +
+                    "mp_ToolTip	= \"" + tmp_ToolTip + "\"," +
+					"mp_funcSyntax	= \"" + tmp_funcSyntax + "\"," +
+					"mp_funcHelp = \"" + tmp_funcHelp + "\"," +
+					"mp_funcGenerate	= \"" + tmp_funcGenerate + "\"" +
+                    " WHERE mp_Id = " + tID;
+
+        alert("Successfully updated " + tmp_funcName );
+        Conn.Execute(updStr);
+        Conn.Close();
+    }
+    //***********************************************************************************************************************************************************
+    //END OF FORMS
+    function GetDocFuncs(ctrl) {
+        var Conn = new ActiveXObject("ADODB.Connection");
+        var RS = new ActiveXObject("ADODB.Recordset");
+        var selKey = new String(document.getElementById('ott_Description').value);
+        var selStr = "SELECT mp_id, mp_funcName, mp_FuncHelp FROM otMethodProperties, otfuncTypes WHERE otMethodProperties.mp_funcType = otfuncTypes.ft_funcType AND otfuncTypes.ft_name = '" + selKey + "' Order By mp_funcName";
+        var divCtrl;
+        var tmpStr;
+        divCtrl = document.getElementById('spMethodsDiv');
+        Conn.Open(gProvider);
+        RS.Open(selStr, Conn);
+        tmpStr = "<table class='clsDataGrid' width=450 cellpadding=1 cellspacing=1>";
+        tmpStr += "<tr><th>Id</th><th>Function Name</th><th>Function Help</th></tr>";
+        while (RS.EOF != 1) {
+            tmpStr += "<tr><td><a href='javascript:" + "LocalProcess(3," + RS.Fields(0) + ")'>" + RS.Fields(0) + "</a></td><td>" + RS('mp_funcName') + "</td><td>" + RS("mp_FuncHelp") + "</td></tr>";
+            RS.MoveNext();
+        }
+        tmpStr += "</table>";
+        RS.Close();
+        Conn.Close();
+        divCtrl.innerHTML = tmpStr;
+        divCtrl.style.display = "";
+    }
+    function SetColor(sColor) {
+        var ctrl1 = document.getElementById('divColor');
+        var ctrl2 = $("#" + ctrl1.getAttribute("callingCtrl"))[0];
+        if (ctrl2) {
+            ctrl2.value = sColor;
+            ctrl2.style.backgroundColor = sColor;
+            ctrl1.style.display = "none";
+        }
+    }
+    function otShowColor(ctrl) {
+        var ctrl1 = document.getElementById('divColor');
+        if (ctrl1.style.display == "none") {
+            var tl = otGetOffset(ctrl);
+            ctrl1.style.pixelTop = tl.top + 40;
+            ctrl1.style.pixelLeft = tl.left;
+            ctrl1.style.display = "";
+            ctrl1.setAttribute("callingCtrl", ctrl.id);
+        } else {
+            ctrl1.style.display = "none";
+        }
+    }
+    //UTILITY FUNCTIONS
+    function otGetOffset(el) {
+        var _x = 0;
+        var _y = 0;
+        while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+            _x += el.offsetLeft - el.scrollLeft;
+            _y += el.offsetTop - el.scrollTop;
+            el = el.offsetParent;
+            if (el.tagName == "DIV")
+                break;
+        }
+        return { top: _y, left: _x };
+    }
+    function otNumCheck(e, ctrl) {
+        var x = 1;
+        if (!e)
+            e = window.event;
+        if (((e.keyCode >= 96 && e.keyCode <= 105) || (e.keyCode >= 48 && e.keyCode <= 57)) && e.keyCode != 8)
+            return true;
+        else if (e.keyCode != 8 && e.keyCode != 9 && e.keyCode != 37 && e.keyCode != 39 && e.keyCode != 110 && e.keyCode != 111) {
+            otCancelEvent(e);
+        }
+            //CHECK MULTIPLE PERIODS
+        else if (e.keyCode == 110) {
+            if (ctrl.value) {
+                if (ctrl.value.indexOf(".") != -1)
+                    otCancelEvent(e);
+            }
+        }
+    }
+
+    function otAlphaCheck(e, ctrl) {
+        gMainWin.window.status = e.keyCode;
+        if ((e.shiftKey && e.keyCode == 189))
+            return true;
+        if ((e.keyCode >= 65 && e.keyCode <= 90) && e.keyCode != 8)
+            return true;
+        else if (e.keyCode != 8 && e.keyCode != 9 && e.keyCode != 35 && e.keyCode != 36 && e.keyCode != 37 && e.keyCode != 39) {
+            otCancelEvent(e);
+        }
+    }
+
+    function otCancelEvent(e) {
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
+        else {
+            window.event.cancelBubble = true;
+            window.event.returnValue = false;
+        }
+    }
+    //EXTERNAL FUNCTIONS
+    function fnIsOurCustomBrowser() {
+        if (window.external.IsOurCustomBrowser != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    function getPath() {
+        if (window.external) {
+            return window.external.GetAppPath;
+        } else {
+            return "";
+        }
+    }
+</script>
